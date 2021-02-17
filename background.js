@@ -1,5 +1,5 @@
 //Variables
-let PORT, timerRunning, difference, startTime, myWorkTime, minutes, seconds, isRunning=false;
+let PORT, timerRunning, startTime, myWorkTime, minutes, seconds, isRunning=false;
 
 chrome.runtime.onConnect.addListener(connected);
 
@@ -21,27 +21,33 @@ function startTimer(req){
 
 function stopTimer(timerID){
     clearInterval(timerID);
-    PORT.postMessage({thisMinutes: myWorkTime, thisSeconds: 0, isRunning: false});
+    return {thisMinutes: myWorkTime, thisSeconds: 0, isRunning: false};
+}
+
+function myNotification(){
+    chrome.notifications.create({
+        "type": "basic",
+        "iconUrl": chrome.runtime.getURL("myicon.png"),
+        "title": "Time for cake!",
+        "message": "Something something cake"
+      });
 }
 
 function myTimerFunc(request){
     startTimer(request.myWorkTime);
     timerRunning = window.setInterval(()=>{
-        difference = Date.now() - startTime;
+        let difference = Date.now() - startTime;
         minutes = Math.floor(myWorkTime - (difference % (1000 * 60 * 60)) / (1000 * 60));
-        seconds = Math.floor(61-((difference % (1000 * 60)) / 1000));
-        // console.log(minutes,seconds,PORT.name);
-        try{
-            PORT.postMessage({thisMinutes: minutes, thisSeconds: seconds, isRunning: isRunning});
-        }catch(e){
-            console.log("Waiting...")
-        }
+        seconds = Math.floor(60-((difference % (1000 * 60)) / 1000));
+        let timeToSend = {thisMinutes: minutes, thisSeconds: seconds, isRunning: isRunning};
         if(difference/1000 >= ((myWorkTime*60)-1)){
-           try{
-               stopTimer(timerRunning);
-           }catch(e){
-               console.log(timerRunning);
-           }
+            myNotification();
+           timeToSend = stopTimer(timerRunning);
+        }
+        try{
+            PORT.postMessage(timeToSend);
+        }catch(e){
+            console.log("Waiting");
         }
     },1000);
 }

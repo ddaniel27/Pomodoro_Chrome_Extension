@@ -73,13 +73,21 @@
     </style>
 </head>
 <body>
-    <div class="main-frame">
+    <div class="main-frame just-text">
         <p class="just-text"><i class="fas fa-hourglass-half"></i> Pomodoro Timer</p>
         <hr>
+        <button class="box-styling behavior-button" id="switchTimer"><i class="fas fa-exchange-alt"></i></button>
         <div class="main-container top-container">
-            <input type="text" class="box-styling text-timer" id="workTime" maxlength="2" value="25">
+            <input type="text" class="box-styling text-timer work-timer" id="workTime" maxlength="2" value="25">
+            <input type="text" class="box-styling text-timer rest-timer" id="breakTime" maxlength="2" value="05" hidden>
             <label for="seconds">:</label>
-            <input type="text" class="box-styling text-timer" name="seconds" id="seconds" value="00" readonly>
+            <input type="text" class="box-styling text-timer work-timer" name="seconds" id="seconds" value="00" readonly>
+            <input type="text" class="box-styling text-timer rest-timer" name="breakSeconds" id="breakSeconds" value="00" readonly hidden>
+            <!-- <label for="breakSeconds" class="rest-timer" hidden>:</label> -->
+        </div>
+        <div class="bottom-container top-container">
+            <p class="just-text work-timer">Working Timer</p>
+            <p class="just-text rest-timer" hidden>Rest Timer</p>
         </div>
         <div class="main-container bottom-container">
             <button id="startButton" class="box-styling behavior-button" autofocus>Start</button>

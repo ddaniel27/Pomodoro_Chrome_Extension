@@ -1,8 +1,13 @@
 let port = chrome.runtime.connect({name:"myTimer"});
 let startButton = document.getElementById("startButton");
 let stopButton = document.getElementById("stopButton");
+let switchButton = document.getElementById("switchTimer");
 let myPomodoroInit = document.getElementById("workTime");
 let mySeconds = document.getElementById("seconds");
+
+let workTimerElements = [...document.getElementsByClassName("work-timer")];
+let restTimerElements = [...document.getElementsByClassName("rest-timer")];
+
 let startTime, myWorkTime, timerWorking;
 
 port.onMessage.addListener(msg=>{
@@ -10,6 +15,11 @@ port.onMessage.addListener(msg=>{
     mySeconds.value = msg.thisSeconds > 10 ? msg.thisSeconds : msg.thisSeconds.toString().padStart(2,"0");
     if(msg.isRunning)configStart();
     else configEnd();
+});
+
+switchButton.addEventListener("click",()=>{
+    workTimerElements.forEach(e=>e.toggleAttribute("hidden"));
+    restTimerElements.forEach(e=>e.toggleAttribute("hidden"));
 });
 
 startButton.addEventListener("click",()=>{
@@ -42,6 +52,9 @@ function configStart(){
     startButton.setAttribute("disabled","");
     startButton.removeAttribute("autofocus");
     myPomodoroInit.setAttribute("readonly","");
+    switchButton.setAttribute("disabled","");
+    workTimerElements.forEach(e=>e.removeAttribute("hidden"));
+    restTimerElements.forEach(e=>e.setAttribute("hidden",""));
     stopButton.focus();
     stopButton.removeAttribute("disabled");
 }
@@ -49,6 +62,7 @@ function configStart(){
 function configEnd(){
     startButton.removeAttribute("disabled");
     startButton.focus();
+    switchButton.removeAttribute("disabled");
     myPomodoroInit.removeAttribute("readonly");
     stopButton.setAttribute("disabled","");
 }
