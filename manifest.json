@@ -1,0 +1,31 @@
+{
+    "name": "Pomodoro Timer",
+    "version": "1.0",
+    "description": "A simple pomodoro timer that helps you to stay focus in what you are doing.",
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": true
+      },
+    "browser_action":{
+        "default_popup": "popup.html"
+    },
+    "icons":{
+      "16" : "myicon.png",
+      "32" : "myicon.png",
+      "64" : "myicon.png",
+      "128" : "myicon.png"
+  },
+  "commands": { 
+    "_execute_browser_action": { 
+      "suggested_key": { 
+        "default": "Ctrl+Shift+F", 
+        "mac": "MacCtrl+Shift+F" 
+      }, 
+      "description": "Opens popup.html" 
+    } 
+  },
+    "permissions":[
+        "storage"
+    ],
+    "manifest_version": 2
+  }

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!--FontAwesome CDN-->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <!--Google Fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    
+    <title>Pomodoro Timer</title>
+    <style>
+        /*Containers*/
+        body{
+            background-color:#dff4f3 ;
+        }
+        hr{
+            border: 1px solid #878ecd;
+        }
+        .main-container{
+            color: #878ecd;
+            font-size: 4.5rem;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .top-container{
+            padding-top:0;
+            padding-bottom: 0;
+        }
+        .bottom-container{
+            padding-top: 0;
+        }
+        .main-frame{
+            margin: auto;
+            width: 25rem;
+        }
+
+        /*Elements*/
+        .text-timer{
+            border: 0 solid;
+            font-size: 4.5rem;
+            text-align: right;
+        }
+        .behavior-button{
+            border: 2px solid #878ecd;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            height: 50px;
+        }
+        .behavior-button:active, .behavior-button:disabled{
+            border-color: #b9bbdf;
+        }
+        .box-styling{
+            background:none;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0 5px;
+            outline: none;
+            width: 100px;
+        }
+        .just-text{
+            color: #878ecd;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            margin: 0;
+            padding:20px;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-frame">
+        <p class="just-text"><i class="fas fa-hourglass-half"></i> Pomodoro Timer</p>
+        <hr>
+        <div class="main-container top-container">
+            <input type="text" class="box-styling text-timer" id="workTime" maxlength="2" value="25">
+            <label for="seconds">:</label>
+            <input type="text" class="box-styling text-timer" name="seconds" id="seconds" value="00" readonly>
+        </div>
+        <div class="main-container bottom-container">
+            <button id="startButton" class="box-styling behavior-button" autofocus>Start</button>
+            <button id="stopButton" class="box-styling behavior-button" disabled>Stop</button>
+        </div>
+    </div>
+    <script src="contentScript.js"></script>
+</body>
+</html>
