@@ -1,3 +1,8 @@
+//Cuando se actualiza la extensión se cargan valores por defecto
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.storage.sync.set({pomodoroWorkTimer: [25,0], pomodoroRestTimer: [5,0], isWorking: true});
+  });
+
 //Variables
 let PORT, timerRunning, startTime, myWorkTime, minutes, seconds, isRunning=false;
 
@@ -6,9 +11,8 @@ chrome.runtime.onConnect.addListener(connected);
 function connected(p){
     PORT=p;
     PORT.onMessage.addListener(msg=>{
-        if(msg.stopRunning){
-            stopTimer(timerRunning);
-        }
+        console.log(msg.nowIsWorking);
+        if(msg.stopRunning) stopTimer(timerRunning,msg.nowIsWorking)//PORT.postMessage(stopTimer(timerRunning,msg.nowIsWorking));
         else myTimerFunc(msg);
     });
 }
@@ -19,8 +23,9 @@ function startTimer(req){
     isRunning = true;
 }
 
-function stopTimer(timerID){
+function stopTimer(timerID,workingTime){
     clearInterval(timerID);
+    chrome.storage.sync.set({isWorking: (!workingTime)});
     return {thisMinutes: myWorkTime, thisSeconds: 0, isRunning: false};
 }
 
@@ -42,7 +47,7 @@ function myTimerFunc(request){
         let timeToSend = {thisMinutes: minutes, thisSeconds: seconds, isRunning: isRunning};
         if(difference/1000 >= ((myWorkTime*60)-1)){
             myNotification();
-           timeToSend = stopTimer(timerRunning);
+            timeToSend = stopTimer(timerRunning,request.nowIsWorking);
         }
         try{
             PORT.postMessage(timeToSend);
