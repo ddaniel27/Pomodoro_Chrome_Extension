@@ -10,72 +10,16 @@
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <!--Mi CSS-->
+    <link rel="stylesheet" href="mystyles.css">
     
     <title>Pomodoro Timer</title>
-    <style>
-        /*Containers*/
-        body{
-            background-color:#dff4f3 ;
-        }
-        hr{
-            border: 1px solid #878ecd;
-        }
-        .main-container{
-            color: #878ecd;
-            font-size: 4.5rem;
-            margin: auto;
-            padding: 20px;
-            text-align: center;
-        }
-        .top-container{
-            padding-top:0;
-            padding-bottom: 0;
-        }
-        .bottom-container{
-            padding-top: 0;
-        }
-        .main-frame{
-            margin: auto;
-            width: 25rem;
-        }
-
-        /*Elements*/
-        .text-timer{
-            border: 0 solid;
-            font-size: 4.5rem;
-            text-align: right;
-        }
-        .behavior-button{
-            border: 2px solid #878ecd;
-            border-radius: 10px;
-            font-size: 1.5rem;
-            height: 50px;
-        }
-        .behavior-button:active, .behavior-button:disabled{
-            border-color: #b9bbdf;
-        }
-        .box-styling{
-            background:none;
-            font-family: 'Montserrat', sans-serif;
-            margin: 0 5px;
-            outline: none;
-            width: 100px;
-        }
-        .just-text{
-            color: #878ecd;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2rem;
-            margin: 0;
-            padding:20px;
-            padding-bottom: 10px;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
+    <button class="options" id="optionsButton"><i class="fas fa-cog"></i></button>
+    <p class="just-text bottom-container"><i class="fas fa-hourglass-half"></i> Pomodoro Timer</p>
+    <hr>
     <div class="main-frame just-text">
-        <p class="just-text"><i class="fas fa-hourglass-half"></i> Pomodoro Timer</p>
-        <hr>
         <button class="box-styling behavior-button" id="switchTimer"><i class="fas fa-exchange-alt"></i></button>
         <div class="main-container top-container">
             <input type="text" class="box-styling text-timer work-timer" maxlength="2">
@@ -83,7 +27,6 @@
             <label for="seconds">:</label>
             <input type="text" class="box-styling text-timer work-timer" name="workSeconds" readonly>
             <input type="text" class="box-styling text-timer rest-timer" name="breakSeconds" readonly hidden>
-            <!-- <label for="breakSeconds" class="rest-timer" hidden>:</label> -->
         </div>
         <div class="bottom-container top-container">
             <p class="just-text work-timer">Working Timer</p>

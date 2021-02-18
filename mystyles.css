@@ -1,0 +1,71 @@
+/*Minify version*/
+/*body{background-color:#dff4f3}hr{border:1px solid #878ecd}.main-container{color:#878ecd;font-size:4.5rem;margin:auto;padding:20px;text-align:center}.just-text{color:#878ecd;font-family:'Montserrat',sans-serif;font-size:2rem;margin:0;padding:20px;padding-bottom:10px;text-align:center}.top-container{padding-top:0;padding-bottom:0}.bottom-container{padding-top:0}.main-frame{margin:auto;width:25rem}.text-timer{border:0 solid;font-size:4.5rem;text-align:right}.behavior-button{border:2px solid #878ecd;border-radius:10px;font-size:1.5rem;height:50px}.behavior-button:active,.behavior-button:disabled,.behavior-button:hover{border-color:#b9bbdf}.box-styling{background:none;font-family:'Montserrat',sans-serif;margin:0 5px;outline:none;width:100px}.options{background:none;border:none;color:#878ecd;font-size:1.5rem;left:90%;outline:none;position:relative}.options:active,.options:disabled,.options:hover{color:#b9bbdf}*/
+       
+body{
+    background-color:#dff4f3 ;
+    font-family: 'Montserrat', sans-serif;
+}
+hr{
+    border: 1px solid #878ecd;
+}
+.main-container{
+    color: #878ecd;
+    font-size: 4.5rem;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+.just-text{
+    color: #878ecd;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    margin: 0;
+    padding:20px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.top-container{
+    padding-top:0;
+    padding-bottom: 0;
+}
+.bottom-container{
+    padding-top: 0;
+}
+.main-frame{
+    margin: auto;
+    width: 25rem;
+}
+
+.text-timer{
+    border: none;
+    font-size: 4.5rem;
+    text-align: right;
+}
+.behavior-button{
+    border: 2px solid #878ecd;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    height: 50px;
+}
+.behavior-button:active, .behavior-button:disabled, .behavior-button:hover{
+    border-color: #b9bbdf;
+}
+.box-styling{
+    background:none;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0 5px;
+    outline: none;
+    width: 100px;
+}
+.options{
+    background: none;
+    border: none;
+    color: #878ecd;
+    font-size: 1.5rem;
+    left: 90%;
+    outline:none;
+    position: relative;
+}
+.options:active, .options:disabled, .options:hover{
+    color: #b9bbdf;
+}

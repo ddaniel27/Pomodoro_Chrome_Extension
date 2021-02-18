@@ -24,9 +24,11 @@
       "description": "Opens popup.html" 
     } 
   },
+  "options_page": "options.html",
     "permissions":[
-        "storage",
-        "notifications"
+      "notifications",
+      "storage",
+      "tabs"
     ],
     "manifest_version": 2
   }

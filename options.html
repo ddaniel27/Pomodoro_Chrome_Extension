@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <!--Google Fonts-->
+     <link rel="preconnect" href="https://fonts.gstatic.com">
+     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+
+    <title>Extension Options</title>
+    <!--Mi CSS-->
+    <link rel="stylesheet" href="mystyles.css">
+    <style>
+      body{
+        text-align: center;
+        width: 40rem;
+      }
+      .main-timer-container{
+        position: relative;
+      }
+      .timer-container{
+        background-color: #878ecd;
+        height: 15rem;
+        margin: auto;
+        position: absolute;
+        width: 20rem;
+      }
+      .timer-container p{
+        margin: 0;
+        padding: 10px;
+        text-align: center;
+      }
+      .rest-timer{
+        right: 0;
+      }
+      .options-behavior-button{
+        border-color: #b9bbdf;
+      }
+      .options-behavior-button:active, .options-behavior-button:disabled, .options-behavior-button:hover{
+        border-color: #dff4f3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class = "main-timer-container">
+      <h1>Options page</h1>
+      <div class = "timer-container work-timer">
+        <p>Default work time: </p>
+        <input class="box-styling text-timer" type="text" maxlength="2"><br>
+        <button class="box-styling behavior-button options-behavior-button">SET</button>
+        <p class="dummy-text">You can set your default time to work. This value will apear everytime you open the app in the work timer.</p>
+      </div>
+      <div class = "timer-container rest-timer">
+        <p>Default rest time: </p>
+        <input class="box-styling text-timer" type="text" maxlength="2"><br>
+        <button class="box-styling behavior-button options-behavior-button">SET</button>
+        <p class="dummy-text">You can set your default time to rest. This value will apear everytime you open the app in the rest timer.</p>
+      </div>
+    </div>
+    <div class = "notifications">
+      <p>Here is the notifications options. I'm so bored now to do this.</p>
+    </div>  
+  </body>
+  <script src="options.js"></script>
+</html>
