@@ -1,6 +1,6 @@
 {
-    "name": "Pomodoro Timer",
-    "version": "1.0",
+    "name": "Simple Pomodoro Timer",
+    "version": "1.0.0",
     "description": "A simple pomodoro timer that helps you to stay focus in what you are doing.",
     "background": {
         "scripts": ["background.js"],

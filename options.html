@@ -31,33 +31,40 @@
       .rest-timer{
         right: 0;
       }
+      .work-timer{
+        left:0;
+      }
       .options-behavior-button{
         border-color: #b9bbdf;
       }
       .options-behavior-button:active, .options-behavior-button:disabled, .options-behavior-button:hover{
         border-color: #dff4f3;
       }
+      .notifications{
+        position: absolute;
+        top: 20rem;
+      }
     </style>
   </head>
   <body>
-    <div class = "main-timer-container">
-      <h1>Options page</h1>
-      <div class = "timer-container work-timer">
-        <p>Default work time: </p>
-        <input class="box-styling text-timer" type="text" maxlength="2"><br>
-        <button class="box-styling behavior-button options-behavior-button">SET</button>
-        <p class="dummy-text">You can set your default time to work. This value will apear everytime you open the app in the work timer.</p>
+      <div class = "main-timer-container">
+        <h1>Options page</h1>
+        <div class = "timer-container work-timer">
+          <p>Default work time: </p>
+          <input class="box-styling text-timer" type="text" maxlength="2"><br>
+          <button class="box-styling behavior-button options-behavior-button">SET</button>
+          <p class="dummy-text">You can set your default time to work. This value will apear everytime you open the app in the work timer.</p>
+        </div>
+        <div class = "timer-container rest-timer">
+          <p>Default rest time: </p>
+          <input class="box-styling text-timer" type="text" maxlength="2"><br>
+          <button class="box-styling behavior-button options-behavior-button">SET</button>
+          <p class="dummy-text">You can set your default time to rest. This value will apear everytime you open the app in the rest timer.</p>
+        </div>
       </div>
-      <div class = "timer-container rest-timer">
-        <p>Default rest time: </p>
-        <input class="box-styling text-timer" type="text" maxlength="2"><br>
-        <button class="box-styling behavior-button options-behavior-button">SET</button>
-        <p class="dummy-text">You can set your default time to rest. This value will apear everytime you open the app in the rest timer.</p>
-      </div>
-    </div>
-    <div class = "notifications">
-      <p>Here is the notifications options. I'm so bored now to do this.</p>
-    </div>  
+      <div class = "notifications">
+        <p>Here is the notifications options. I'm so bored now to do this. Please, wait to the next version.</p>
+      </div>  
   </body>
   <script src="options.js"></script>
 </html>

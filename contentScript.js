@@ -1,10 +1,7 @@
 let port = chrome.runtime.connect({ name: "myTimer" });
 let workTimerElements = [...document.getElementsByClassName("work-timer")];
 let restTimerElements = [...document.getElementsByClassName("rest-timer")];
-let startButton = document.getElementById("startButton");
-let stopButton = document.getElementById("stopButton");
-let switchButton = document.getElementById("switchTimer");
-let options = document.getElementById("optionsButton");
+let buttonsArray = [...document.getElementsByClassName("button-class")];
 
 let startTime,
   myWorkTime,
@@ -12,7 +9,7 @@ let startTime,
 
 startApp();
 
-options.addEventListener("click",()=>{
+buttonsArray[0].addEventListener("click",()=>{
   console.log("It's working!");
   chrome.tabs.create({ "url": "chrome://extensions/?options=" + chrome.runtime.id });
 });
@@ -45,21 +42,18 @@ port.onMessage.addListener((msg) => {
   }
 });
 
-switchButton.addEventListener("click", () => {
+buttonsArray[1].addEventListener("click", () => {
   isWorking = !isWorking;
   workTimerElements.forEach((e) => e.toggleAttribute("hidden"));
   restTimerElements.forEach((e) => e.toggleAttribute("hidden"));
 });
 
-startButton.addEventListener("click", () => {
-  startTime = isWorking
-    ? workTimerElements[0].value
-    : restTimerElements[0].value;
+buttonsArray[2].addEventListener("click", () => {
   port.postMessage(startState(isWorking));
   configStart();
 });
 
-stopButton.addEventListener("click", () => {
+buttonsArray[3].addEventListener("click", () => {
   port.postMessage(stopState(isWorking));
   if (isWorking) {
     workTimerElements[0].value = startTime;
@@ -95,20 +89,20 @@ function stopState(workingTime) {
 }
 
 function configStart() {
-  startButton.setAttribute("disabled", "");
-  startButton.removeAttribute("autofocus");
+  buttonsArray[2].setAttribute("disabled", "");
+  buttonsArray[2].removeAttribute("autofocus");
   workTimerElements[0].setAttribute("readonly", "");
-  switchButton.setAttribute("disabled", "");
-  stopButton.focus();
-  stopButton.removeAttribute("disabled");
+  buttonsArray[1].setAttribute("disabled", "");
+  buttonsArray[3].focus();
+  buttonsArray[3].removeAttribute("disabled");
 }
 
 function configEnd() {
-  startButton.removeAttribute("disabled");
-  startButton.focus();
-  switchButton.removeAttribute("disabled");
+  buttonsArray[2].removeAttribute("disabled");
+  buttonsArray[2].focus();
+  buttonsArray[1].removeAttribute("disabled");
   workTimerElements[0].removeAttribute("readonly");
-  stopButton.setAttribute("disabled", "");
+  buttonsArray[3].setAttribute("disabled", "");
 }
 
 function timerToShow(workingTime) {
@@ -125,6 +119,9 @@ function startApp() {
   chrome.storage.sync.get(
     ["pomodoroWorkTimer", "pomodoroRestTimer", "isWorking"],
     (status) => {
+      startTime = status.isWorking
+      ? status.pomodoroWorkTimer[0]
+      : status.pomodoroRestTimer[0];
       workTimerElements[0].value =
         status.pomodoroWorkTimer[0] > 10
           ? status.pomodoroWorkTimer[0]
