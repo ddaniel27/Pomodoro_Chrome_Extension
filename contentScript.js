@@ -67,6 +67,10 @@ buttonsArray[3].addEventListener("click", () => {
   configEnd();
 });
 
+buttonsArray[4].addEventListener("click",()=>{
+  chrome.tabs.create({ "url": "chrome-extension://" + chrome.runtime.id + "/charts.html"});
+});
+
 function startState(workingTime) {
   let validation = workingTime
   ? Number(workTimerElements[0].value)
