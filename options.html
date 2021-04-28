@@ -10,17 +10,17 @@
     <link rel="stylesheet" href="mystyles.css">
     <style>
       body{
+        display: flex;
+        flex-direction: column;
         text-align: center;
         width: 40rem;
       }
       .main-timer-container{
-        position: relative;
+        display: flex;
       }
       .timer-container{
         background-color: #878ecd;
-        height: 15rem;
-        margin: auto;
-        position: absolute;
+        height: 12rem;
         width: 20rem;
       }
       .timer-container p{
@@ -28,43 +28,62 @@
         padding: 10px;
         text-align: center;
       }
-      .rest-timer{
-        right: 0;
-      }
-      .work-timer{
-        left:0;
-      }
       .options-behavior-button{
         border-color: #b9bbdf;
+        text-align: center;
       }
       .options-behavior-button:active, .options-behavior-button:disabled, .options-behavior-button:hover{
         border-color: #dff4f3;
       }
       .notifications{
-        position: absolute;
+        align-items: center;
+        background-color: #878ecd;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 0.7rem;
+        padding: 1rem;
         top: 20rem;
+      }
+      label{
+        font-size: 1.5rem;
+      }
+      option{
+        background-color: #b9bbdf;
+      }
+      #setButton{
+        margin: auto;
+      }
+      audio{
+        outline: none;
       }
     </style>
   </head>
   <body>
+    <h1>Options page</h1>
       <div class = "main-timer-container">
-        <h1>Options page</h1>
         <div class = "timer-container work-timer">
           <p>Default work time: </p>
           <input class="box-styling text-timer" type="text" maxlength="2"><br>
-          <button class="box-styling behavior-button options-behavior-button">SET</button>
           <p class="dummy-text">You can set your default time to work. This value will apear everytime you open the app in the work timer.</p>
         </div>
         <div class = "timer-container rest-timer">
           <p>Default rest time: </p>
           <input class="box-styling text-timer" type="text" maxlength="2"><br>
-          <button class="box-styling behavior-button options-behavior-button">SET</button>
+          <!-- <button class="box-styling behavior-button options-behavior-button">SET</button> -->
           <p class="dummy-text">You can set your default time to rest. This value will apear everytime you open the app in the rest timer.</p>
         </div>
       </div>
       <div class = "notifications">
-        <p>Here is the notifications options. I'm so bored now to do this. Please, wait to the next version.</p>
-      </div>  
+        <label for="sound">Choose a default sound: </label>
+        <select class="box-styling behavior-button options-behavior-button" name="sound" id="sound">
+          <option value="Default">Default</option>
+          <option value="Sonata">Sonata</option>
+          <option value="RIP">RIP</option>
+          <option value="Random">???</option>
+        </select>
+        <audio controls id="audioTester"/>
+      </div>
+      <button class="box-styling behavior-button options-behavior-button" id="setButton">SET</button>
   </body>
   <script src="options.js"></script>
 </html>

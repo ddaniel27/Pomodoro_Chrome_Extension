@@ -9,6 +9,7 @@ let startTime,
 
 startApp();
 
+//Settings button
 buttonsArray[0].addEventListener("click",()=>{
   console.log("It's working!");
   chrome.tabs.create({ "url": "chrome://extensions/?options=" + chrome.runtime.id });
@@ -42,17 +43,20 @@ port.onMessage.addListener((msg) => {
   }
 });
 
+//Switch button
 buttonsArray[1].addEventListener("click", () => {
   isWorking = !isWorking;
   workTimerElements.forEach((e) => e.toggleAttribute("hidden"));
   restTimerElements.forEach((e) => e.toggleAttribute("hidden"));
 });
 
+//Start button
 buttonsArray[2].addEventListener("click", () => {
   port.postMessage(startState(isWorking));
   configStart();
 });
 
+//Stop button
 buttonsArray[3].addEventListener("click", () => {
   port.postMessage(stopState(isWorking));
   if (isWorking) {
@@ -67,6 +71,7 @@ buttonsArray[3].addEventListener("click", () => {
   configEnd();
 });
 
+//Charts button
 buttonsArray[4].addEventListener("click",()=>{
   chrome.tabs.create({ "url": "chrome-extension://" + chrome.runtime.id + "/charts.html"});
 });
@@ -75,7 +80,7 @@ function startState(workingTime) {
   let validation = workingTime
   ? Number(workTimerElements[0].value)
   : Number(restTimerElements[0].value);
-  if(isNaN(validation))validation = 0;
+  if(isNaN(validation)) validation = 0;
   let myTimerState = {
     startTime: Date.now(),
     nowIsWorking: workingTime,

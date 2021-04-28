@@ -4,7 +4,8 @@ chrome.runtime.onInstalled.addListener(() => {
     pomodoroWorkTimer: [25, 0],
     pomodoroRestTimer: [5, 0],
     isWorking: true,
-    timeTracker: [0, 1],
+    timeTracker: new Array(31).fill(0),
+    soundToUse: "Default"
   });
 });
 
@@ -16,12 +17,28 @@ let PORT,
   myWorkTime,
   minutes,
   seconds,
-  timeTracker,
+  timeTracker=[],
   isRunning = false;
 
-chrome.storage.sync.get(["timeTracker"], (status) => {
+chrome.storage.sync.get(["timeTracker","soundToUse"], (status) => {
   timeTracker = status.timeTracker;
-  console.log(status);
+  switch(status.soundToUse){
+    case "Default":
+      url="./Audio/Default.mp3";
+      break;
+    case "Sonata":
+      url="./Audio/Sonata.mp3";
+      break;
+    case "RIP":
+      url="./Audio/RIP.mp3";
+      break;
+    case "Random":
+      url="./Audio/Random.mp3";
+      break;
+    default:
+      url="./Audio/Default.mp3";
+      break;
+  }
 });
 
 chrome.runtime.onConnect.addListener(connected);
@@ -35,8 +52,11 @@ function connected(p) {
 }
 
 function startTimer(req) {
+  chrome.storage.sync.set({
+    isWorking: req.nowIsWorking
+  });
   startTime = Date.now();
-  myWorkTime = req;
+  myWorkTime = req.myWorkTime;
   isRunning = true;
 }
 
@@ -60,6 +80,7 @@ function myWorkNotification() {
     title: "Time to work!",
     type: "basic",
   });
+  urlSound();
 }
 
 function myRestNotification() {
@@ -69,24 +90,29 @@ function myRestNotification() {
     title: "Time for cake!",
     type: "basic",
   });
+  urlSound();
 }
 
 function myTimeTracker(workingTime) {
   let lastDay = timeTracker.shift();
   let thisDay = new Date().getDate();
-
+  let timeWorked = difference / 60000;
+  timeWorked = Number(timeWorked.toFixed(2));
   if(workingTime){
-  timeTracker[thisDay - 1] =
-    lastDay == thisDay
-      ? (timeTracker[thisDay - 1] += Math.floor(difference / 1000))
-      : Math.floor(difference / 1000);
+    if(lastDay == thisDay){
+      timeTracker[timeTracker.length - 1] += timeWorked;
+    }
+    else{
+      timeTracker.shift();
+      timeTracker.push(timeWorked);
+    } 
   }
   lastDay = thisDay;
   timeTracker.unshift(lastDay);
 }
 
 function myTimerFunc(request) {
-  startTimer(request.myWorkTime);
+  startTimer(request);
   timerRunning = window.setInterval(() => {
     difference = Date.now() - startTime;
     minutes = Math.floor(
@@ -107,4 +133,28 @@ function myTimerFunc(request) {
       console.log("Waiting");
     }
   }, 1000);
+}
+
+function urlSound(){
+  chrome.storage.sync.get(["soundToUse"], (status) => {
+    let url;
+    switch(status.soundToUse){
+      case "Default":
+        url="./Audio/Default.mp3";
+        break;
+      case "Sonata":
+        url="./Audio/Sonata.mp3";
+        break;
+      case "RIP":
+        url="./Audio/RIP.mp3";
+        break;
+      case "Random":
+        url="./Audio/Random.mp3";
+        break;
+      default:
+        url="./Audio/Default.mp3";
+        break;
+    }
+    new Audio(url).play();
+  });
 }

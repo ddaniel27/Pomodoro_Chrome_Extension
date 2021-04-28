@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="chart.css">
     <title>Stadistics</title>
     <style>
         .container {
@@ -13,11 +16,20 @@
     </style>
 </head>
 <body>
-    <button id="renderBtn">
-        Render
+    <button class="renderBtn">
+        Last 7 days
     </button>
+    <button class="renderBtn">
+        Last 30 days
+    </button>
+
     <div class="container">
         <canvas id="myChart"></canvas>
+    </div>
+
+    <div id="quotes">
+        <p id="quote"></p>
+        <p id="author"></p>
     </div>
 
     <script id="charr" src="chartjs.js"></script>

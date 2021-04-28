@@ -1,0 +1,31 @@
+body{
+    background-color: #dff4f3;
+    text-align: center;
+}
+.renderBtn{
+    background-color: #dff4f3;
+    border: 2px solid #878ecd;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    outline: none;
+    padding: 0.7rem;
+    margin: 0.3rem;
+}
+.container{
+    margin: auto;
+    padding: 1rem;
+}
+#quotes{
+    font-size: 1.5rem;
+}
+#quote{
+    font-weight: bold;
+    font-style: italic;
+    width: 40rem;
+    margin: auto;
+}
+#author{
+    font-style: italic;
+}
