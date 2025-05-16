@@ -14,7 +14,7 @@ chrome.runtime.onInstalled.addListener(() => {
     isWorking: true,
     timeTracker: timeTracker,
     soundToUse: "Default",
-    lastDate: new Date().getDay()
+    lastDate: new Date().toString()
   });
 });
 
@@ -97,20 +97,35 @@ function updateTimeTracker(wasWorking) {
   if (!wasWorking) return;
 
   chrome.storage.sync.get(["lastDate", "timeTracker"], ({ lastDate, timeTracker }) => {
-    const now = new Date().getDay()
+    const now = new Date();
+    const lastRegisteredDay = new Date(lastDate);
     const minutesWorked = ((Date.now() - startTime) / 60000).toFixed(2);
 
-    const updatedTracker = [...timeTracker]
-    if (lastDate === now){
-      updatedTracker[updatedTracker.length - 1] += parseFloat(minutesWorked)
+    const updatedTracker = [...timeTracker];
+
+    const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const lastDateOnly = new Date(lastRegisteredDay.getFullYear(), lastRegisteredDay.getMonth(), lastRegisteredDay.getDate());
+    let daysDifference = Math.floor((nowDateOnly - lastDateOnly) / (1000 * 60 * 60 * 24));
+
+    if (daysDifference < 1) daysDifference = 0;
+    if (daysDifference > 30) daysDifference = 30;
+
+    if (daysDifference === 0) {
+      updatedTracker[updatedTracker.length - 1] += parseFloat(minutesWorked);
     } else {
-      updatedTracker.shift();
+      updatedTracker.splice(0, daysDifference);
+      for (let i = 1; i < daysDifference; i++) {
+        updatedTracker.push(0);
+      }
       updatedTracker.push(parseFloat(minutesWorked));
-    } 
+    }
+
+    while (updatedTracker.length < 31) updatedTracker.unshift(0);
+    while (updatedTracker.length > 31) updatedTracker.shift();
 
     chrome.storage.sync.set({
       timeTracker: updatedTracker,
-      lastDate: now
+      lastDate: now.toString()
     });
   });
 }
