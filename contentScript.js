@@ -11,7 +11,6 @@ startApp();
 
 //Settings button
 buttonsArray[0].addEventListener("click",()=>{
-  console.log("It's working!");
   chrome.tabs.create({ "url": "chrome://extensions/?options=" + chrome.runtime.id });
 });
 

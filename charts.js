@@ -1,22 +1,10 @@
-
 let renderBtns = [...document.getElementsByClassName("renderBtn")];
 renderBtns[0].addEventListener("click", function() {chartData(7)});
 renderBtns[1].addEventListener("click", function() {chartData(30)});
-let text = document.getElementById("quote");
-let author = document.getElementById("author");
-
-let quotes=[];
-fetch("https://type.fit/api/quotes")
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(data) {
-    quotes=data;
-  });
 
 function renderChart(data, labels) {
     var ctx = document.getElementById("myChart").getContext('2d');
-    var myChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'line',
         options:{
             scales:{
@@ -63,9 +51,5 @@ function chartData(day){
         }
         renderChart(myData, myLabels);
     });
-    const thisQuote = quotes[Math.floor(Math.random() * 1643) + 1];
-    text.innerHTML = '"' + thisQuote.text + '"';
-    author.innerHTML = "-"
-    author.innerHTML += thisQuote.author == null ? "Anonymous" : thisQuote.author;
 };
 

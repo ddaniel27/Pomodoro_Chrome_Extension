@@ -1,74 +1,60 @@
-//Default values when the developer updates the app
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({
-    pomodoroWorkTimer: [25, 0],
-    pomodoroRestTimer: [5, 0],
-    isWorking: true,
-    timeTracker: new Array(31).fill(0),
-    soundToUse: "Default"
-  });
-});
-
 //Variables
 let PORT,
+  currentDuration = 0,
   difference,
   timerRunning,
   startTime,
   myWorkTime,
   minutes,
   seconds,
-  timeTracker=[],
   isRunning = false;
 
-chrome.storage.sync.get(["timeTracker","soundToUse"], (status) => {
-  timeTracker = status.timeTracker;
-  switch(status.soundToUse){
-    case "Default":
-      url="./Audio/Default.mp3";
-      break;
-    case "Sonata":
-      url="./Audio/Sonata.mp3";
-      break;
-    case "RIP":
-      url="./Audio/RIP.mp3";
-      break;
-    case "Random":
-      url="./Audio/Random.mp3";
-      break;
-    default:
-      url="./Audio/Default.mp3";
-      break;
-  }
+//Default values when the developer updates the app
+chrome.runtime.onInstalled.addListener(() => {
+  let timeTracker = new Array(31).fill(0)
+
+  chrome.storage.sync.set({
+    pomodoroWorkTimer: [25, 0],
+    pomodoroRestTimer: [5, 0],
+    isWorking: true,
+    timeTracker: timeTracker,
+    soundToUse: "Default",
+    lastDate: new Date().getDay()
+  });
 });
 
-chrome.runtime.onConnect.addListener(connected);
+chrome.runtime.onConnect.addListener((p) => {
+  PORT = p
+  port.onMessage.addListener(handleMessage)
+});
 
-function connected(p) {
-  PORT = p;
-  PORT.onMessage.addListener((msg) => {
-    if (msg.stopRunning) stopTimer(timerRunning, msg.nowIsWorking);
-    else myTimerFunc(msg);
-  });
+function handleMessage(msg) {
+  if (msg.stopRunning) {
+    stopTimer(timerRunning, msg.nowIsWorking);
+  } else {
+    myTimerFunc(msg);
+  }
 }
 
-function startTimer(req) {
-  chrome.storage.sync.set({
-    isWorking: req.nowIsWorking
-  });
+function startTimer({myWorkTime, nowIsWorking}) {
+  chrome.storage.sync.set({ isWorking: nowIsWorking });
+
   startTime = Date.now();
-  myWorkTime = req.myWorkTime;
+  myWorkTime = myWorkTime;
   isRunning = true;
 }
 
 function stopTimer(timerID, workingTime) {
   clearInterval(timerID);
   myTimeTracker(workingTime);
-  chrome.storage.sync.set({
-    isWorking: !workingTime,
-    timeTracker: timeTracker,
-  });
-  if (workingTime) myRestNotification();
-  else myWorkNotification();
+  chrome.storage.sync.set({ isWorking: !workingTime, });
+
+  if (workingTime) {
+    myRestNotification();
+  } else {
+    myWorkNotification();
+  }
+
   return { thisMinutes: myWorkTime, thisSeconds: 0, isRunning: false };
 }
 
@@ -94,21 +80,29 @@ function myRestNotification() {
 }
 
 function myTimeTracker(workingTime) {
-  let lastDay = timeTracker.shift();
-  let thisDay = new Date().getDate();
-  let timeWorked = difference / 60000;
-  timeWorked = Number(timeWorked.toFixed(2));
-  if(workingTime){
-    if(lastDay == thisDay){
-      timeTracker[timeTracker.length - 1] += timeWorked;
+  chrome.storage.sync.get(["lastDate", "timeTracker"], (status) => {
+    let timeWorked = difference / 60000;
+    timeWorked = Number(timeWorked.toFixed(2));
+
+    let timeTracker = status.timeTracker
+    lastDate = status.lastDate
+    now = new Date().getDay()
+
+    if(workingTime){
+      if(lastDate == now){
+        timeTracker[timeTracker.length - 1] += timeWorked;
+      }
+      else{
+        timeTracker.shift();
+        timeTracker.push(timeWorked);
+      } 
+
+      chrome.storage.sync.set({
+        timeTracker: timeTracker,
+        lastDate: now
+      })
     }
-    else{
-      timeTracker.shift();
-      timeTracker.push(timeWorked);
-    } 
-  }
-  lastDay = thisDay;
-  timeTracker.unshift(lastDay);
+  })
 }
 
 function myTimerFunc(request) {
