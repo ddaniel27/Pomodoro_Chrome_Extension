@@ -53,27 +53,29 @@ function renderChart(data, labels) {
 }
 
 function resetChart(){
-    document.getElementById("myChart").remove();
-    let myContainer = [...document.getElementsByClassName("container")][0];
-    myContainer.append(document.createElement("canvas"));
-    let myChildrenArray = [...myContainer.childNodes];
-    myChildrenArray[myChildrenArray.length - 1].setAttribute("id","myChart");
+  document.getElementById("myChart").remove();
+  let myContainer = [...document.getElementsByClassName("container")][0];
+  myContainer.append(document.createElement("canvas"));
+  let myChildrenArray = [...myContainer.childNodes];
+  myChildrenArray[myChildrenArray.length - 1].setAttribute("id","myChart");
 }
 
 function chartData(day){
-    resetChart();
-    chrome.storage.sync.get(["timeTracker"],status=> {
-        let myData = Object.values(status.timeTracker);
-        let myLabels = Object.keys(status.timeTracker);
-        if(day == 7){
-            myData = myData.slice(24,31);
-            myLabels = [1,2,3,4,5,6,7];
-        }
-        else{
-            myData.shift();
-            myLabels.shift();
-        }
-        renderChart(myData, myLabels);
-    });
+  resetChart();
+  chrome.storage.sync.get(["timeTracker"],status=> {
+    let myData = Object.values(status.timeTracker);
+    let myLabels = Object.keys(status.timeTracker);
+    if(day == 7){
+      myData = myData.slice(24,31);
+      myLabels = [1,2,3,4,5,6,7];
+    }
+    else{
+      myData.shift();
+      myLabels.shift();
+    }
+
+    myData = myData.map(value => Math.round(value))
+    renderChart(myData, myLabels);
+  });
 };
 
