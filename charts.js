@@ -3,29 +3,53 @@ renderBtns[0].addEventListener("click", function() {chartData(7)});
 renderBtns[1].addEventListener("click", function() {chartData(30)});
 
 function renderChart(data, labels) {
-    var ctx = document.getElementById("myChart").getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        options:{
-            scales:{
-                y:{
-                    title:{
-                        display: true,
-                        text: "Minutes"
-                    }
-                }
+  var ctx = document.getElementById("myChart").getContext("2d");
+
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Your progress",
+        data: data,
+        borderColor: "rgba(204, 153, 255, 1)",
+        backgroundColor: "rgba(230, 204, 255, 0.4)"
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            callback: function(value) {
+              var hours = Math.floor(value / 60);
+              var minutes = value % 60;
+              var hDisplay = hours > 0 ? hours + "h " : "";
+              var mDisplay = minutes > 0 ? minutes + "m" : "";
+              return hDisplay + mDisplay || "0m";
             }
-        },
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Your progress',
-                data: data,
-                borderColor: 'rgba(204, 153, 255, 1)',
-                backgroundColor: 'rgba(230, 204, 255, 0.4)',
-            }]
-        },
-    });
+          },
+          scaleLabel: {
+            display: true,
+            labelString: "Time (HH:mm)"
+          }
+        }]
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem) {
+            var value = tooltipItem.yLabel;
+            var hours = Math.floor(value / 60);
+            var minutes = value % 60;
+            var hDisplay = hours > 0 ? hours + "h " : "";
+            var mDisplay = minutes > 0 ? minutes + "m" : "";
+            return hDisplay + mDisplay || "0m";
+          }
+        }
+      }
+    }
+  });
 }
 
 function resetChart(){
