@@ -1,99 +1,92 @@
-let port = chrome.runtime.connect({ name: "myTimer" });
-let workTimerElements = [...document.getElementsByClassName("work-timer")];
-let restTimerElements = [...document.getElementsByClassName("rest-timer")];
-let buttonsArray = [...document.getElementsByClassName("button-class")];
+const port = chrome.runtime.connect({ name: "myTimer" });
 
-let startTime,
-  myWorkTime,
-  isWorking = true;
+const workTimerElements = Array.from(document.getElementsByClassName("work-timer"));
+const restTimerElements = Array.from(document.getElementsByClassName("rest-timer"));
+const buttonsArray = Array.from(document.getElementsByClassName("button-class"));
 
-startApp();
+let startTime;
+let isWorking = true;
 
-//Settings button
-buttonsArray[0].addEventListener("click",()=>{
-  chrome.tabs.create({ "url": "chrome://extensions/?options=" + chrome.runtime.id });
+// Utils
+const formatNumber = (n) => n.toString().padStart(2, "0");
+
+const updateTimerElements = (elements, minutes, seconds) => {
+  elements[0].value = formatNumber(minutes);
+  elements[1].value = formatNumber(seconds);
+}
+
+const setTimerFromStorage = ({ pomodoroWorkTimer, pomodoroRestTimer, isWorking: working}) => {
+  updateTimerElements(workTimerElements, ...pomodoroWorkTimer);
+  updateTimerElements(restTimerElements, ...pomodoroRestTimer);
+
+  startTime = working ? pomodoroWorkTimer[0] : pomodoroRestTimer[0];
+  isWorking = working;
+  timerToShow(working);
+}
+
+// Listeners
+
+buttonsArray[0].addEventListener("click", () => {
+  chrome.tabs.create({ url: `chrome://extensions/?options=${chrome.runtime.id}` });
 });
 
+buttonsArray[1].addEventListener("click", () => {
+  isWorking = !isWorking;
+  workTimerElements.forEach(e => e.toggleAttribute("hidden"));
+  restTimerElements.forEach(e => e.toggleAttribute("hidden"));
+});
+
+buttonsArray[2].addEventListener("click", () => {
+  port.postMessage(startState(isWorking));
+  configStart();
+});
+
+buttonsArray[3].addEventListener("click", () => {
+  port.postMessage(stopState(isWorking));
+  const elements = isWorking ? workTimerElements : restTimerElements;
+  updateTimerElements(elements, startTime, 0);
+
+  isWorking = !isWorking;
+  timerToShow(isWorking);
+  configEnd();
+});
+
+buttonsArray[4].addEventListener("click", () => {
+  chrome.tabs.create({ url: `chrome-extension://${chrome.runtime.id}/charts.html` });
+});
+
+
+// Background communication
+
 port.onMessage.addListener((msg) => {
-  if (isWorking) {
-    workTimerElements[0].value =
-      msg.thisMinutes > 10
-        ? msg.thisMinutes
-        : msg.thisMinutes.toString().padStart(2, "0");
-    workTimerElements[1].value =
-      msg.thisSeconds > 10
-        ? msg.thisSeconds
-        : msg.thisSeconds.toString().padStart(2, "0");
+  const elements = isWorking ? workTimerElements : restTimerElements;
+  updateTimerElements(elements, msg.thisMinutes, msg.thisSeconds);
+
+  if (msg.isRunning) {
+    configStart();
   } else {
-    restTimerElements[0].value =
-      msg.thisMinutes > 10
-        ? msg.thisMinutes
-        : msg.thisMinutes.toString().padStart(2, "0");
-    restTimerElements[1].value =
-      msg.thisSeconds > 10
-        ? msg.thisSeconds
-        : msg.thisSeconds.toString().padStart(2, "0");
-  }
-  if (msg.isRunning) configStart();
-  else{
     configEnd();
     isWorking = !isWorking;
     timerToShow(isWorking);
   }
 });
 
-//Switch button
-buttonsArray[1].addEventListener("click", () => {
-  isWorking = !isWorking;
-  workTimerElements.forEach((e) => e.toggleAttribute("hidden"));
-  restTimerElements.forEach((e) => e.toggleAttribute("hidden"));
-});
-
-//Start button
-buttonsArray[2].addEventListener("click", () => {
-  port.postMessage(startState(isWorking));
-  configStart();
-});
-
-//Stop button
-buttonsArray[3].addEventListener("click", () => {
-  port.postMessage(stopState(isWorking));
-  if (isWorking) {
-    workTimerElements[0].value = startTime;
-    workTimerElements[1].value = "00";
-  } else {
-    restTimerElements[0].value = startTime;
-    restTimerElements[1].value = "00";
-  }
-  isWorking = !isWorking;
-  timerToShow(isWorking);
-  configEnd();
-});
-
-//Charts button
-buttonsArray[4].addEventListener("click",()=>{
-  chrome.tabs.create({ "url": "chrome-extension://" + chrome.runtime.id + "/charts.html"});
-});
-
+// State config
 function startState(workingTime) {
-  let validation = workingTime
-  ? Number(workTimerElements[0].value)
-  : Number(restTimerElements[0].value);
-  if(isNaN(validation)) validation = 0;
-  let myTimerState = {
+  let minutes = Number((workingTime ? workTimerElements : restTimerElements)[0].value);
+  if (isNaN(minutes)) minutes = 0;
+  return {
     startTime: Date.now(),
     nowIsWorking: workingTime,
-    myWorkTime: validation,
+    myWorkTime: minutes,
   };
-  return myTimerState;
 }
 
 function stopState(workingTime) {
-  let myTimerState = {
+  return {
     nowIsWorking: workingTime,
     stopRunning: true,
-  };
-  return myTimerState;
+  }
 }
 
 function configStart() {
@@ -114,40 +107,19 @@ function configEnd() {
 }
 
 function timerToShow(workingTime) {
-  if (workingTime) {
-    workTimerElements.forEach((e) => e.removeAttribute("hidden"));
-    restTimerElements.forEach((e) => e.setAttribute("hidden", ""));
-  } else {
-    workTimerElements.forEach((e) => e.setAttribute("hidden", ""));
-    restTimerElements.forEach((e) => e.removeAttribute("hidden"));
-  }
+  const [show, hide] = workingTime ?
+    [workTimerElements, restTimerElements] :
+    [restTimerElements, workTimerElements];
+
+  show.forEach(e => e.removeAttribute("hidden"))
+  hide.forEach(e => e.setAttribute("hidden", ""))
 }
 
 function startApp() {
   chrome.storage.sync.get(
     ["pomodoroWorkTimer", "pomodoroRestTimer", "isWorking"],
-    (status) => {
-      startTime = status.isWorking
-      ? status.pomodoroWorkTimer[0]
-      : status.pomodoroRestTimer[0];
-      workTimerElements[0].value =
-        status.pomodoroWorkTimer[0] > 10
-          ? status.pomodoroWorkTimer[0]
-          : status.pomodoroWorkTimer[0].toString().padStart(2, "0");
-      workTimerElements[1].value =
-        status.pomodoroWorkTimer[1] > 10
-          ? status.pomodoroWorkTimer[1]
-          : status.pomodoroWorkTimer[1].toString().padStart(2, "0");
-      restTimerElements[0].value =
-        status.pomodoroRestTimer[0] > 10
-          ? status.pomodoroRestTimer[0]
-          : status.pomodoroRestTimer[0].toString().padStart(2, "0");
-      restTimerElements[1].value =
-        status.pomodoroRestTimer[1] > 10
-          ? status.pomodoroRestTimer[1]
-          : status.pomodoroRestTimer[1].toString().padStart(2, "0");
-      isWorking = status.isWorking;
-      timerToShow(status.isWorking);
-    }
+    setTimerFromStorage
   );
 }
+
+startApp();
